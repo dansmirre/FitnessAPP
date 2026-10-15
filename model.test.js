@@ -1,0 +1,5 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {initial,finishWorkout,volume,validateState} from './model.js';
+test('completion awards XP once and retains independent history',()=>{const s=initial();s.active={id:'session',entries:s.exercises.map((e,i)=>({...e,done:i===0}))};const result=finishWorkout(s);assert.equal(result.xp,10);assert.equal(result.history[0].entries.length,1);assert.equal(result.active,null);assert.throws(()=>finishWorkout(result));s.exercises[0].name='Changed';assert.equal(result.history[0].entries[0].name,'Приседания');});
+test('empty workout cannot earn XP',()=>{const s=initial();s.active={id:'empty',entries:[]};assert.throws(()=>finishWorkout(s));assert.equal(s.xp,0);});
+test('volume uses actual recorded values',()=>assert.equal(volume([{sets:3,reps:10,weight:20},{sets:2,reps:12,weight:10}]),840));
+test('backup validation accepts valid state and rejects malformed records',()=>{assert.deepEqual(validateState(initial()),initial());assert.throws(()=>validateState({}));const s=initial();s.exercises[0].weight=-1;assert.throws(()=>validateState(s));});
