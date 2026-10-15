@@ -1,0 +1,5 @@
+import {mkdir,readFile,writeFile,rename} from 'node:fs/promises';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {merge,validateDocument} from './sync-model.js';
+export function createStore(directory){const queues=new Map();return {async sync(key,incoming){validateDocument(incoming);const id=createHash('sha256').update(key).digest('hex');const prior=queues.get(id)||Promise.resolve();const task=prior.catch(()=>{}).then(async()=>{await mkdir(directory,{recursive:true,mode:0o700});const file=path.join(directory,id+'.json');let saved={records:{}};try{saved=validateDocument(JSON.parse(await readFile(file,'utf8')));}catch(e){if(e.code!=='ENOENT')throw e;}const result=validateDocument(merge(saved,incoming));const data=JSON.stringify(result);if(Buffer.byteLength(data)>2_000_000)throw Error('Account storage limit reached');await writeFile(file+'.tmp',data,{mode:0o600});await rename(file+'.tmp',file);return result;});queues.set(id,task);try{return await task;}finally{if(queues.get(id)===task)queues.delete(id);}}};}
