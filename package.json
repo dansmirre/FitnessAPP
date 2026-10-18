@@ -1,1 +1,18 @@
-{"name":"forma-fitness","version":"2.2.0","private":true,"type":"module","scripts":{"start":"node server.js","dev":"node server.js","test":"node --test"}}
+{
+  "name": "forma-fitness",
+  "version": "2.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test",
+    "build:avatar": "esbuild character3d.js --bundle --minify --format=esm --outfile=avatar3d.bundle.js --legal-comments=external"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.11"
+  }
+}
