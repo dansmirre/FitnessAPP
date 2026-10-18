@@ -1,1 +1,1 @@
-{"name":"forma-fitness","version":"2.1.0","private":true,"type":"module","scripts":{"start":"node server.js","dev":"node server.js","test":"node --test"}}
+{"name":"forma-fitness","version":"2.2.0","private":true,"type":"module","scripts":{"start":"node server.js","dev":"node server.js","test":"node --test"}}
